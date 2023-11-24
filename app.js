@@ -2,6 +2,8 @@
 const express = require("express");
 const morgan = require("morgan");
 const taskRouter = require("./routes/taskRouters");
+const CustomError = require("./utils/CustomError");
+const globalErrorHandler = require("./controllers/errorController");
 
 //Call Express() method
 let app = express();
@@ -16,5 +18,20 @@ app.use((req, res, next) => {
 
 //Using Routes Endpoint
 app.use("/api/v1/tasks", taskRouter);
+// app.use("/api/v1/users", authRouter);
+
+//Defaults Route
+app.all("*", (req, res, next) => {
+  //Initiate Custom error handler middleware object
+  const err = new CustomError(
+    `'Can't find ${req.originalUrl} on the server!`,
+    404
+  );
+
+  next(err); //call global error handler middleware
+});
+
+//Use globalErrorHandler middleware of errorContrller file
+app.use(globalErrorHandler);
 
 module.exports = app;
