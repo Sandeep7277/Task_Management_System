@@ -4,6 +4,7 @@ const morgan = require("morgan");
 const taskRouter = require("./routes/taskRouters");
 const CustomError = require("./utils/CustomError");
 const globalErrorHandler = require("./controllers/errorController");
+const authRouter = require("./routes/authRouter");
 
 //Call Express() method
 let app = express();
@@ -18,7 +19,7 @@ app.use((req, res, next) => {
 
 //Using Routes Endpoint
 app.use("/api/v1/tasks", taskRouter);
-// app.use("/api/v1/users", authRouter);
+app.use("/api/v1/users", authRouter);
 
 //Defaults Route
 app.all("*", (req, res, next) => {
